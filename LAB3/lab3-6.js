@@ -8,8 +8,8 @@ let diemKo2 = 95;
 let diemKo3 = 106;
 let averageDol = diemDol1 + diemDol2 + diemDol3;
 let averageKo = diemKo1 + diemKo2 + diemKo3;
-let minDol = averageDol >= 100;
-let minKo = averageKo >= 100;
+let minDol = averageDol >= 50;
+let minKo = averageKo >= 50;
 if (averageDol > averageKo && minDol) {
     console.log("Dolphins is the winnner!");
 } else if (averageKo > averageDol && minKo) {
