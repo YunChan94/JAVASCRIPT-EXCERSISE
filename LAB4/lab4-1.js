@@ -103,12 +103,3 @@ console.log(tips);
 console.log(total);
 
 
-
-const jonas = {
-    firstName: 'Jonas',
-    lastName: 'Schmedtman',
-    job: 'Teacher',
-    location: 'Portulgal',
-    friend: ['Micheal', 'Peter', 'Steven'],
-}
-console.log(`${jonas.firstName} has ${jonas.friend.length} friends, and his best friend is ${jonas.friend[0]}.`)
