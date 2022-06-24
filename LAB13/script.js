@@ -19,6 +19,42 @@ console.log(carBMW.brake(5));
 console.log(carMes.accelerate(10));
 console.log(carMes.brake(5));
 
+// Lab 13.2: Sử dụng ES6 Class
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+  // Getter Đổi từ speed = km/h -> mile/h
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+  // Setter đổi từ speed = mile/h -> km/h
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+  accelerate() {
+    this.speed = this.speed + 10;
+    console.log(`${this.make} is going at ${this.speed}`);
+  }
+  brake() {
+    this.speed = this.speed - 5;
+    console.log(`${this.make} is going at ${this.speed}`);
+  }
+}
+const bmw = new CarCl("BMW", 120);
+const mescedes = new CarCl("Mescedes", 95);
+
+// Test getter - setter
+bmw.accelerate();
+bmw.brake();
+mescedes.accelerate();
+mescedes.brake();
+console.log(bmw.speedUS); // Getter
+bmw.speedUS = 50; // mile/h - Setter
+console.log(bmw);
+
 // Lab 13.3: Tính kế thừa
 const EV = function (made, speed, charge) {
   Car.call(this, made, speed);
@@ -44,26 +80,19 @@ const electricCar = new EV(
 );
 console.log(electricCar);
 
-//Lab 13.2: Sử dụng ES6 Class
-// class CarCl {
-//   constructor(make, speed) {
-//     this.make = make;
-//     this.speed = speed;
-//   }
-//   set speedUS(speed) {
-//     this.speedUS = speed * 1.6;
-//   }
-//   get speedUS() {
-//     return this.speedUS;
-//   }
-//   accelerate() {
-//     console.log(this.speed + 10);
-//   }
-//   brake() {
-//     console.log(this.speed - 5);
-//   }
-// }
-// const bmw = new CarCl("BMW", 120);
-// const mescedes = new CarCl("Mescedes", 95);
-
-// Test getter - setter
+// Lab 13.4: Tính kế thừa sử dụng ES6
+class EVCal extends CarCl {
+  constructor(made, speed, charge) {
+    // Lúc nào cũng phải xảy ra trc
+    super(made, speed);
+    this.charge = charge;
+  }
+  chargeBattery(chargeTo) {
+    return (this.charge = chargeTo);
+  }
+}
+const rivian = new EVCal("Rivian", 120, 23);
+console.log(rivian);
+rivian.accelerate();
+rivian.chargeBattery(90);
+console.log(rivian);
