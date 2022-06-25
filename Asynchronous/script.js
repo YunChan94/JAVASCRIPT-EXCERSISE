@@ -24,6 +24,12 @@ const renderCountry = function (data, classname = '') {
 const renderErr = function (mess) {
   countriesContainer.insertAdjacentText('beforeend', mess);
 };
+const getJSON = function (url, errorMsg = 'Somerthing went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+    return response.json();
+  });
+};
 // const getCountryDataAndNeighbor = function (country) {
 //   const request = new XMLHttpRequest();
 //   request.open('GET', `https://restcountries.com/v2/name/${country}`);
@@ -54,15 +60,16 @@ const renderErr = function (mess) {
 
 /////////////////// PROMISE ////////////////////
 const getCountryData = function (country) {
-  fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(response => response.json())
+  getJSON(`https://restcountries.com/v2/name/${country}`, 'Country not found')
     .then(data => {
       renderCountry(data[0]);
-      const neighbour = data[0].borders[0];
-      if (!neighbour) return;
-      return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+      const neighbour = data[0].borders;
+      if (!neighbour) throw new Error('No neighbour found!');
+      return getJSON(
+        `https://restcountries.com/v2/alpha/${neighbour}`,
+        'Country not found'
+      );
     })
-    .then(response => response.json())
     .then(data => renderCountry(data, 'neighbour'))
     .catch(err => renderErr(`Something went wrong!💥${err.message}.Try again!`))
     .finally(() => {
