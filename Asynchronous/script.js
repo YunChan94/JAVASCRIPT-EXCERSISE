@@ -112,7 +112,6 @@ const whereAmI = async function (country) {
     const pos = await getPosition();
     console.log(pos);
     const { latitude: lat, longitude: lng } = pos.coords;
-    console.log(lat, lng);
 
     // 🔴Reverse geocoding
     const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`); // reponse
@@ -123,15 +122,63 @@ const whereAmI = async function (country) {
 
     // 🔴Fetch country data
     // fetch(`https://restcountries.com/v2/name/${country}`).then(res => console.log(res));
-    const res = await fetch(
-      `https://restcountries.com/v2/name/${dataGeo.country}`
-    );
+    `https://restcountries.com/v2/name/${dataGeo.country}`;
+    const res = await fetch();
     if (!res) throw new Error(`Country can't found 💥`);
     const data = await res.json();
     renderCountry(data[0]);
+    return `You are in ${dataGeo.city}, ${dataGeo.country}`;
   } catch (err) {
     console.error(`${err}`);
     renderErr(`Something went wrong!💥${err.message}.`);
+    // Reject promise returned from async funtion
+    throw err;
   }
 };
-whereAmI();
+// IIFE- biểu thức hàm được gọi ngay lập tức
+// (async function () {
+//   try {
+//     const resPlace = await whereAmI();
+//     console.log(resPlace);
+//   } catch (err) {
+//     console.error(`2: ${err.message}💥`); // catch
+//   }
+//   console.log('3: Finished getting location'); // finally
+// })(); //👈
+
+// 🛑Run promise in the same time (chạy paralel)
+const get3Country = async function (c1, c2, c3) {
+  try {
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v2/name/${c1}`),
+      getJSON(`https://restcountries.com/v2/name/${c2}`),
+      getJSON(`https://restcountries.com/v2/name/${c3}`),
+    ]);
+    console.log(data.map(d => d[0].capital));
+  } catch (err) {
+    console.error(`${err}`);
+  }
+};
+get3Country('Vietnam', 'Cambodia', 'Thailand');
+
+// 🛑 Promise.race (Khi promise cùng chạy song song, promise nào trả về kq nhanh hơn sẽ trả về trc)
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://restcountries.com/v2/name/italy`),
+    getJSON(`https://restcountries.com/v2/name/egypt`),
+    getJSON(`https://restcountries.com/v2/name/mexico`),
+  ]);
+  console.log(res[0]);
+})();
+const timeout = function (sec) {
+  return new Promise(function (_, reject) {
+    setTimeout(() => {
+      reject(new Error('Request took too long'));
+    }, sec * 1000);
+  });
+};
+Promise.race([getJSON(`https://restcountries.com/v2/name/mexico`), timeout(5)])
+  .then(res => console.log(res))
+  .catch(err => console.log(err));
+
+// 🛑 Promise.allSettled
