@@ -51,8 +51,9 @@ bmw.accelerate();
 bmw.brake();
 mescedes.accelerate();
 mescedes.brake();
-console.log(bmw.speedUS); // Getter
-bmw.speedUS = 50; // mile/h - Setter
+console.log(bmw);
+console.log(bmw.speedUS); // Getter: dùng như một property của obj để gọi giá trị
+bmw.speedUS = 30; // mile/h - Setter: gán giá trị cho property đó
 console.log(bmw);
 
 // Lab 13.3: Tính kế thừa
